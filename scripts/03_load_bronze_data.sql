@@ -44,3 +44,58 @@ Source-to-Target Mapping:
 9. product_category_name_translation.csv
    -> bronze.product_category_translation
 
+Note:
+The Bronze Layer stores raw source data with minimal transformation.
+Column names and source structure are preserved to support traceability.
+=============================================================
+*/
+
+
+-- =============================================================
+-- Bronze Layer Row Count Validation
+-- =============================================================
+
+SELECT 'bronze.olist_customers' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_customers
+
+UNION ALL
+
+SELECT 'bronze.olist_geolocation' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_geolocation
+
+UNION ALL
+
+SELECT 'bronze.olist_order_items' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_order_items
+
+UNION ALL
+
+SELECT 'bronze.olist_order_payments' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_order_payments
+
+UNION ALL
+
+SELECT 'bronze.olist_order_reviews' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_order_reviews
+
+UNION ALL
+
+SELECT 'bronze.olist_orders' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_orders
+
+UNION ALL
+
+SELECT 'bronze.olist_products' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_products
+
+UNION ALL
+
+SELECT 'bronze.olist_sellers' AS table_name, COUNT(*) AS row_count
+FROM bronze.olist_sellers
+
+UNION ALL
+
+SELECT 'bronze.product_category_translation' AS table_name, COUNT(*) AS row_count
+FROM bronze.product_category_translation
+
+ORDER BY table_name;
