@@ -404,3 +404,68 @@ WHERE
     OR
     (payment_value <> 0 AND zero_payment_flag <> 0);
 
+-- =============================================================
+-- 8. Geolocation validation
+-- =============================================================
+
+-- Compare Bronze raw geolocation and Silver cleaned geolocation
+SELECT
+    (SELECT COUNT(*) FROM bronze.olist_geolocation) AS bronze_geolocation_rows,
+    (SELECT COUNT(*) FROM silver.geolocation) AS silver_geolocation_rows,
+    (SELECT COUNT(DISTINCT geolocation_zip_code_prefix) FROM bronze.olist_geolocation) AS bronze_distinct_zip_prefixes;
+
+
+-- Confirm no duplicate zip/city/state combinations exist in Silver
+SELECT
+    geolocation_zip_code_prefix,
+    geolocation_city,
+    geolocation_state,
+    COUNT(*) AS duplicate_count
+FROM silver.geolocation
+GROUP BY
+    geolocation_zip_code_prefix,
+    geolocation_city,
+    geolocation_state
+HAVING COUNT(*) > 1;
+
+
+-- Review largest grouped geolocation records
+SELECT *
+FROM silver.geolocation
+ORDER BY geolocation_record_count DESC
+LIMIT 20;
+
+/*
+=============================================================
+Silver Layer Validation Summary
+=============================================================
+
+The Silver Layer validation confirmed that all cleaned and standardized
+tables were successfully loaded and are ready for Gold Layer modeling.
+
+Row count validation confirmed that all expected records were loaded
+from the Bronze Layer into the Silver Layer. The geolocation table was
+intentionally reduced from 1,000,163 raw records to a cleaned reference
+table by grouping zip code prefix, city, and state combinations.
+
+Critical key checks confirmed that the main customer, order, product,
+seller, payment, and review keys are complete.
+
+Duplicate key checks confirmed that primary and business keys are unique
+where expected.
+
+Relationship checks confirmed that Silver orders, customers, order items,
+payments, reviews, products, and sellers connect correctly.
+
+Data quality checks confirmed that known Bronze issues were preserved
+through Silver quality flags, including missing product categories,
+missing category translations, invalid carrier dates, missing delivery
+dates, late deliveries, and zero payment records.
+
+Calculated field checks confirmed that total_item_value and key data
+quality flags were generated correctly.
+
+The Silver Layer is ready for Gold fact tables, dimension tables,
+reporting views, and Power BI analytics.
+=============================================================
+*/
