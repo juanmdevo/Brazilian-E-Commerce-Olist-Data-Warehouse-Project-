@@ -4,6 +4,8 @@ Project: E-Commerce Data Warehouse Using Medallion Architecture
 Dataset: Olist Brazilian E-Commerce Public Dataset
 Script: 02_create_bronze_tables.sql
 Purpose: Create Bronze Layer tables for raw Olist CSV data.
+Created the initial Bronze Layer SQL script for the Olist e-commerce data warehouse. 
+The script defines raw PostgreSQL tables for all 9 source CSV files while preserving the original source structure for traceability.
 =============================================================
 */
 
